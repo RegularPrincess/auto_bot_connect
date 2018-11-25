@@ -97,13 +97,13 @@ def set_server_settings(token, server_id):
 
 def save_token(token):
     f = open('config.py', 'a')
-    f.write("token = " + token + '\n')
+    f.write("token = '" + token + "'\n")
     f.close()
 
 
 def save_confirm_token(confirmation_token):
     f = open('config.py', 'a')
-    f.write("confirmation_token = " + confirmation_token + '\n')
+    f.write("confirmation_token = '" + confirmation_token + "'\n")
     f.close()
 
 
