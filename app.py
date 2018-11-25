@@ -23,9 +23,10 @@ def get_token(code):
           'redirect_uri=http://89.223.88.106/auto_bot_connect&' \
           'code={}'.format(code)
     response = requests.post(url)
-    print("get_token response: ")
-    print(response)
     t = 'access_token_{}'.format(cfg.group_id)
+    print("get_token response: ")
+    d = json.loads(response.text)[t]
+    print(d)
     try:
         d = json.loads(response.text)[t]
         print(d)
