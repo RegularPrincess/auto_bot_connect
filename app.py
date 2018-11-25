@@ -123,11 +123,11 @@ def debug():
     print("token: ")
     print(token)
     save_token(token)
-    confirm_token = get_confirm_token(token)
-    save_confirm_token(confirm_token)
-    server_id = add_server(token)
-    set_server_settings(token, server_id)
-    return "ok"
+    # confirm_token = get_confirm_token(token)
+    # save_confirm_token(confirm_token)
+    # server_id = add_server(token)
+    # set_server_settings(token, server_id)
+    return "Спасибо, в ближайшее время бот заработает!"
 
 
 if __name__ == '__main__':
