@@ -9,6 +9,12 @@ import config as cfg
 
 app = Flask(__name__)
 
+""" https://oauth.vk.com/authorize?client_id=6700721&display=page&
+group_ids=168998689&
+redirect_uri=http://89.223.88.106/auto_bot_connect&
+scope=manage&response_type=code&v=5.80"""
+
+
 
 def get_token(code):
     url = 'https://oauth.vk.com/access_token?' \
@@ -21,7 +27,7 @@ def get_token(code):
     print(response)
     t = 'access_token_{}'.format(cfg.group_id)
     try:
-        d = json.loads(response.text)['response'][t]
+        d = json.loads(response.text)[t]
         print(d)
         return d
     except Exception:
@@ -48,7 +54,7 @@ def get_confirm_token(token):
 
 def add_server(token):
     data = {
-        "group_id": 'pegas_72',
+        "group_id": cfg.group_id,
         "url": "http://85.143.172.134/vk_bot_roman",
         "title": 'vk_bot',
         "secret_key": cfg.secret_key,
