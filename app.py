@@ -17,6 +17,7 @@ def get_token(code):
           'redirect_uri=http://89.223.88.106/auto_bot_connect&' \
           'code={}'.format(code)
     response = requests.post(url)
+    print("get_token response: ")
     print(response)
     t = 'access_token_{}'.format(cfg.group_id)
     try:
@@ -97,8 +98,10 @@ def save_confirm_token(confirmation_token):
 @app.route(rule='/auto_bot_connect'.format(cfg.bot_name), methods=['GET'])
 def debug():
     code = request.args.get('code')
+    print("code: ")
     print(code)
     token = get_token(code)
+    print("token: ")
     print(token)
     save_token(token)
     confirm_token = get_confirm_token(token)
