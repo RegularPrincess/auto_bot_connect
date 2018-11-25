@@ -25,7 +25,7 @@ def get_token(code):
     #t = 'access_token_{}'.format(cfg.group_id)
     print("get_token response: ")
     d = json.loads(response.text)
-    t = d.keys[1]
+    t = list(d.keys())[1]
     print(t)
     print(d)
     try:
