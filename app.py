@@ -94,7 +94,7 @@ def save_confirm_token(confirmation_token):
     f.close()
 
 
-@app.route(rule='/{}_connect'.format(cfg.bot_name), methods=['GET'])
+@app.route(rule='/auto_bot_connect'.format(cfg.bot_name), methods=['GET'])
 def debug():
     code = request.args.get('code')
     print(code)
@@ -109,4 +109,4 @@ def debug():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=9088)
