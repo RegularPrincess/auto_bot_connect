@@ -15,7 +15,6 @@ redirect_uri=http://89.223.88.106/auto_bot_connect&
 scope=manage&response_type=code&v=5.80"""
 
 
-
 def get_token(code):
     url = 'https://oauth.vk.com/access_token?' \
           'client_id=6700721&' \
@@ -23,15 +22,18 @@ def get_token(code):
           'redirect_uri=http://89.223.88.106/auto_bot_connect&' \
           'code={}'.format(code)
     response = requests.post(url)
-    t = 'access_token_{}'.format(cfg.group_id)
+    #t = 'access_token_{}'.format(cfg.group_id)
     print("get_token response: ")
     d = json.loads(response.text)
+    t = d.keys[1]
+    print(t)
     print(d)
     try:
         d = json.loads(response.text)[t]
         print(d)
         return d
-    except Exception:
+    except Exception as e:
+        print(e)
         print(print(response.text))
         return None
 
