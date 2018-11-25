@@ -28,6 +28,7 @@ def get_token(code):
     t = ''
     for key in d:
         if "token" in key:
+            save_token(key)
             t = key
             print(t)
     print(d)
@@ -61,7 +62,7 @@ def get_confirm_token(token):
 def add_server(token):
     data = {
         "group_id": cfg.group_id,
-        "url": "http://85.143.172.134/vk_bot_roman",
+        "url": "http://85.143.172.134/{}".format(cfg.bot_name),
         "title": 'vk_bot',
         "secret_key": cfg.secret_key,
         'access_token': token,
@@ -98,6 +99,12 @@ def set_server_settings(token, server_id):
 def save_token(token):
     f = open('config.py', 'a')
     f.write("token = '" + token + "'\n")
+    f.close()
+
+
+def save_group_id(key):
+    f = open('config.py', 'a')
+    f.write("key = '" + key + "'\n")
     f.close()
 
 
