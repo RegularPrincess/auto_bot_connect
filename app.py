@@ -1,34 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 import requests
 from flask import Flask
-# from flask import json
+from flask import json
 from flask import request
-# import logging as log
-#
-# import config
-# import service as s
-#
-#
-# token = config.token
-# confirmation_token = config.confirmation_token
-# secret_key = config.secret_key
-# group_id = config.group_id
-# admin_id = config.admin_id
-# admin_name = config.admin_name
-# db_name = config.db_name
-# bot_name = config.bot_name
-# vk_api_url = config.vk_api_url
-
+import config as cfg
 
 app = Flask(__name__)
 
 
-@app.route(rule='/auto_bot_connect', methods=['GET'])
-def debug():
-    code = request.args.get('code')
-    print(code)
-
+def get_token(code):
     url = 'https://oauth.vk.com/access_token?' \
           'client_id=6700721&' \
           'client_secret=7Qj2REiRNqQW71oJ6xy0&' \
@@ -36,15 +18,95 @@ def debug():
           'code={}'.format(code)
     response = requests.post(url)
     print(response)
-    print(response.text)
-    # dict_data = json.loads(response.text)
+    t = 'access_token_{}'.format(cfg.group_id)
+    try:
+        d = json.loads(response.text)['response'][t]
+        print(d)
+        return d
+    except Exception:
+        print(print(response.text))
+        return None
+
+
+def get_confirm_token(token):
+    data = {
+        "group_id": cfg.group_id,
+        "version": 5.80,
+        'access_token': token,
+        'v': cfg.api_ver
+    }
+    res = requests.post(cfg.vk_api_url + 'groups.getCallbackConfirmationCode', data=data)
+    try:
+        d = json.loads(res.text)['response']['code']
+        print(d)
+        return d
+    except Exception:
+        print(res.text)
+        return None
+
+
+def add_server(token):
+    data = {
+        "group_id": 'pegas_72',
+        "url": "http://85.143.172.134/vk_bot_roman",
+        "title": 'vk_bot',
+        "secret_key": cfg.secret_key,
+        'access_token': token,
+        'v': cfg.api_ver
+    }
+    res = requests.post(cfg.vk_api_url + 'groups.addCallbackServer', data=data)
+    print(res.text)
+    try:
+        d = json.loads(res.text)['response']['server_id']
+        print(d)
+        return d
+    except Exception:
+        print(res.text)
+        return None
+
+
+def set_server_settings(token, server_id):
+    data = {
+        "group_id": cfg.group_id,
+        "api_version": cfg.api_ver,
+        "message_new": 1,
+        "message_allow": 1,
+        "message_deny": 1,
+        "group_join": 1,
+        "group_leave": 1,
+        "server_id": server_id,
+        'access_token': token,
+        'v': cfg.api_ver
+    }
+    res = requests.post(cfg.vk_api_url + 'groups.setCallbackSettings', data=data)
+    print(res.text)
+
+
+def save_token(token):
+    f = open('config.py', 'a')
+    f.write("token = " + token + '\n')
+    f.close()
+
+
+def save_confirm_token(confirmation_token):
+    f = open('config.py', 'a')
+    f.write("confirmation_token = " + confirmation_token + '\n')
+    f.close()
+
+
+@app.route(rule='/{}_connect'.format(cfg.bot_name), methods=['GET'])
+def debug():
+    code = request.args.get('code')
+    print(code)
+    token = get_token(code)
+    print(token)
+    save_token(token)
+    confirm_token = get_confirm_token(token)
+    save_confirm_token(confirm_token)
+    server_id = add_server(token)
+    set_server_settings(token, server_id)
     return "ok"
+
 
 if __name__ == '__main__':
     app.run()
-
-
-
-
-# @app.route(rule='/{0}'.format(bot_name), methods=['POST'])
-# def processing():
